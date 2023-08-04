@@ -8,7 +8,7 @@ add_subdirectory(libs/pybind11 pybind11)
 pybind11_add_module(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME} PRIVATE
-    ${PROJECT_NAME}.cpp
+    src/mtsespy.cpp
     libs/MTS-ESP/Client/libMTSClient.cpp
     libs/MTS-ESP/Master/libMTSMaster.cpp
 )
