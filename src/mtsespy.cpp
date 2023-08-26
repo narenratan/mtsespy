@@ -1,6 +1,7 @@
 #include <pybind11/pybind11.h>
 #include "libMTSClient.h"
 #include "libMTSMaster.h"
+#include "Tunings.h"
 
 namespace py = pybind11;
 
@@ -11,6 +12,19 @@ struct MTSClientWrapper {
 MTSClientWrapper register_client(){
     MTSClient* m = MTS_RegisterClient();
     return MTSClientWrapper{m};
+}
+
+py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_filename){
+    auto s = Tunings::readSCLFile(scl_filename);
+    auto k = Tunings::readKBMFile(kbm_filename);
+
+    Tunings::Tuning t(s, k);
+
+    py::list res;
+    for(int i = 0; i < 128; i++) {
+        res.append(t.frequencyForMidiNote(i));
+    }
+    return res;
 }
 
 void deregister_client(MTSClientWrapper client){
@@ -56,4 +70,5 @@ PYBIND11_MODULE(mtsespy, m)
     m.def("set_note_tuning", &set_note_tuning, "Set tuning of single note");
     m.def("set_multi_channel", &set_multi_channel, "Set whether MIDI channel is in multi-channel tuning table");
     m.def("set_multi_channel_note_tuning", &set_multi_channel_note_tuning, "Set tuning of note on specific midi channel");
+    m.def("scala_files_to_frequencies", &scala_files_to_frequencies, "Build frequencies corresponding to given scala files");
 }

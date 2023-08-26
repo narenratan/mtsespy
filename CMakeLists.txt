@@ -13,6 +13,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     libs/MTS-ESP/Master/libMTSMaster.cpp
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC libs/MTS-ESP/Client libs/MTS-ESP/Master)
+target_include_directories(${PROJECT_NAME} PUBLIC libs/MTS-ESP/Client libs/MTS-ESP/Master libs/tuning-library/include)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC dl)
