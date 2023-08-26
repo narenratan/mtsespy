@@ -33,6 +33,14 @@ void set_note_tuning(float frequency_in_hz, int midinote){
     MTS_SetNoteTuning(frequency_in_hz, midinote);
 }
 
+void set_multi_channel(bool set, int midichannel){
+    MTS_SetMultiChannel(set, midichannel);
+}
+
+void set_multi_channel_note_tuning(float frequency_in_hz, int midinote, int midichannel){
+    MTS_SetMultiChannelNoteTuning(frequency_in_hz, midinote, midichannel);
+}
+
 PYBIND11_MODULE(mtsespy, m)
 {
     m.doc() = "Wrapper for ODDSound MTS-ESP C++ library";
@@ -46,4 +54,6 @@ PYBIND11_MODULE(mtsespy, m)
     m.def("register_master", &MTS_RegisterMaster, "Register MTS master");
     m.def("deregister_master", &MTS_DeregisterMaster, "Deregister MTS master");
     m.def("set_note_tuning", &set_note_tuning, "Set tuning of single note");
+    m.def("set_multi_channel", &set_multi_channel, "Set whether MIDI channel is in multi-channel tuning table");
+    m.def("set_multi_channel_note_tuning", &set_multi_channel_note_tuning, "Set tuning of note on specific midi channel");
 }
