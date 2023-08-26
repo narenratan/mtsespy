@@ -14,19 +14,6 @@ MTSClientWrapper register_client(){
     return MTSClientWrapper{m};
 }
 
-py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_filename){
-    auto s = Tunings::readSCLFile(scl_filename);
-    auto k = Tunings::readKBMFile(kbm_filename);
-
-    Tunings::Tuning t(s, k);
-
-    py::list res;
-    for(int i = 0; i < 128; i++) {
-        res.append(t.frequencyForMidiNote(i));
-    }
-    return res;
-}
-
 void deregister_client(MTSClientWrapper client){
     MTS_DeregisterClient(client.ptr);
 }
@@ -53,6 +40,19 @@ void set_multi_channel(bool set, int midichannel){
 
 void set_multi_channel_note_tuning(float frequency_in_hz, int midinote, int midichannel){
     MTS_SetMultiChannelNoteTuning(frequency_in_hz, midinote, midichannel);
+}
+
+py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_filename){
+    auto s = Tunings::readSCLFile(scl_filename);
+    auto k = Tunings::readKBMFile(kbm_filename);
+
+    Tunings::Tuning t(s, k);
+
+    py::list res;
+    for(int i = 0; i < 128; i++) {
+        res.append(t.frequencyForMidiNote(i));
+    }
+    return res;
 }
 
 PYBIND11_MODULE(mtsespy, m)
