@@ -1,18 +1,29 @@
-cmake_minimum_required(VERSION 3.10)
-project(mtsespy VERSION 1.0 LANGUAGES C CXX)
+cmake_minimum_required(VERSION 3.15...3.26)
 
-set(CMAKE_CXX_STANDARD 17)
+project(mtsespy VERSION "0.1.0")
 
-add_subdirectory(libs/pybind11 pybind11)
+# Define CMAKE_INSTALL_xxx: LIBDIR, INCLUDEDIR
+include(GNUInstallDirs)
+include(FetchContent)
 
-pybind11_add_module(${PROJECT_NAME})
+FetchContent_Declare(
+  pybind11
+  URL https://github.com/pybind/pybind11/archive/refs/tags/v2.10.4.tar.gz
+  URL_HASH SHA256=832e2f309c57da9c1e6d4542dedd34b24e4192ecb4d62f6f4866a737454c9970
+)
+FetchContent_MakeAvailable(pybind11)
 
-target_sources(${PROJECT_NAME} PRIVATE
-    src/mtsespy.cpp
+set(python_module_name _mtsespy)
+pybind11_add_module(${python_module_name} MODULE
+  src/mtsespy/mtsespy.cpp
+)
+
+target_sources(_mtsespy PRIVATE
+    src/mtsespy/mtsespy.cpp
     libs/MTS-ESP/Client/libMTSClient.cpp
     libs/MTS-ESP/Master/libMTSMaster.cpp
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC libs/MTS-ESP/Client libs/MTS-ESP/Master libs/tuning-library/include)
+target_include_directories(_mtsespy PUBLIC libs/MTS-ESP/Client libs/MTS-ESP/Master libs/tuning-library/include)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC dl)
+install(TARGETS ${python_module_name} DESTINATION .)

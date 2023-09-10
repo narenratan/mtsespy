@@ -3,11 +3,7 @@
 Currently work in progress. If you'd like to build and use this:
 ```console
 $ git clone https://github.com/narenratan/mtsespy.git
-$ cd mtsespy
-$ git submodule update --init --recursive
-$ cmake -Bbuild
-$ cmake --build build
-$ export PYTHONPATH=$PYTHONPATH:`pwd`/build
+$ python3 -m pip install ./mtsespy
 ```
 
 Example master interpreter session:

@@ -55,7 +55,7 @@ py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_fi
     return res;
 }
 
-PYBIND11_MODULE(mtsespy, m)
+PYBIND11_MODULE(_mtsespy, m)
 {
     m.doc() = "Wrapper for ODDSound MTS-ESP C++ library";
     py::class_<MTSClientWrapper>(m, "MTSClient");
