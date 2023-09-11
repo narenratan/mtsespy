@@ -53,3 +53,7 @@ def test_set_note_tunings():
         with mts.Client() as c:
             client_frequencies = [mts.note_to_frequency(c, i, 0) for i in range(128)]
     assert frequencies == client_frequencies
+
+
+def test_has_ipc():
+    assert mts.has_ipc() == True
