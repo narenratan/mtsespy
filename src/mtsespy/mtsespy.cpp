@@ -30,6 +30,10 @@ double retuning_as_ratio(MTSClientWrapper client, int midinote, int midichannel)
     return MTS_RetuningAsRatio(client.ptr, midinote, midichannel);
 }
 
+const char *get_scale_name(MTSClientWrapper client){
+    return MTS_GetScaleName(client.ptr);
+}
+
 void set_note_tuning(float frequency_in_hz, int midinote){
     MTS_SetNoteTuning(frequency_in_hz, midinote);
 }
@@ -72,6 +76,7 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("note_to_frequency", &note_to_frequency, "Convert midi note to frequency");
     m.def("retuning_in_semitones", &retuning_in_semitones, "Midi note retuning in semitones");
     m.def("retuning_as_ratio", &retuning_as_ratio, "Midi note retuning as ratio");
+    m.def("get_scale_name", &get_scale_name, "Get scale name of current scale");
     m.def("can_register_master", &MTS_CanRegisterMaster, "Check if master has already been registered");
     m.def("register_master", &MTS_RegisterMaster, "Register MTS master");
     m.def("deregister_master", &MTS_DeregisterMaster, "Deregister MTS master");
@@ -80,6 +85,7 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("get_num_clients", &MTS_GetNumClients, "Get number of connected clients");
     m.def("set_note_tuning", &set_note_tuning, "Set tuning of single note");
     m.def("set_note_tunings", &set_note_tunings, "Set tunings of all 128 midi notes");
+    m.def("set_scale_name", &MTS_SetScaleName, "Set scale name");
     m.def("set_multi_channel", &set_multi_channel, "Set whether MIDI channel is in multi-channel tuning table");
     m.def("set_multi_channel_note_tuning", &set_multi_channel_note_tuning, "Set tuning of note on specific midi channel");
     m.def("scala_files_to_frequencies", &scala_files_to_frequencies, "Build frequencies corresponding to given scala files");

@@ -83,3 +83,17 @@ def test_reinitialize_2():
     assert mts.get_num_clients() == 1
     mts.reinitialize()
     assert mts.get_num_clients() == 0
+
+
+def test_get_scale_name():
+    with mts.Client() as c:
+        name = mts.get_scale_name(c)
+    assert name == "12-TET"
+
+
+def test_set_scale_name():
+    with mts.Master():
+        mts.set_scale_name("foo")
+        with mts.Client() as c:
+            name = mts.get_scale_name(c)
+    assert name == "foo"
