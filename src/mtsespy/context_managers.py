@@ -1,5 +1,5 @@
 """
-Conveniences for handling MTS-ESP clients.
+Context managers for MTS-ESP clients and master
 """
 import mtsespy as mts
 

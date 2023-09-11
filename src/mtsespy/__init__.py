@@ -1,2 +1,2 @@
 from ._mtsespy import *
-from .client import Client, Master, MasterExistsError
+from .context_managers import Client, Master, MasterExistsError
