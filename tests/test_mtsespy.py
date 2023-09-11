@@ -78,7 +78,6 @@ def test_reinitialize():
 
 
 def test_reinitialize_2():
-    mts.register_master()
     mts.register_client()
     assert mts.get_num_clients() == 1
     mts.reinitialize()
