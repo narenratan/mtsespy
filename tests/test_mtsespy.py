@@ -44,3 +44,12 @@ def test_master_exists_error():
         with mts.Master():
             with mts.Master():
                 pass
+
+
+def test_set_note_tunings():
+    frequencies = list(range(128))
+    with mts.Master():
+        mts.set_note_tunings(frequencies)
+        with mts.Client() as c:
+            client_frequencies = [mts.note_to_frequency(c, i, 0) for i in range(128)]
+    assert frequencies == client_frequencies

@@ -34,6 +34,14 @@ void set_note_tuning(float frequency_in_hz, int midinote){
     MTS_SetNoteTuning(frequency_in_hz, midinote);
 }
 
+void set_note_tunings(py::list frequencies_in_hz){
+    double f[128];
+    for(int i = 0; i < 128; i++) {
+        f[i] = frequencies_in_hz[i].cast<double>();
+    }
+    MTS_SetNoteTunings(f);
+}
+
 void set_multi_channel(bool set, int midichannel){
     MTS_SetMultiChannel(set, midichannel);
 }
@@ -68,6 +76,7 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("register_master", &MTS_RegisterMaster, "Register MTS master");
     m.def("deregister_master", &MTS_DeregisterMaster, "Deregister MTS master");
     m.def("set_note_tuning", &set_note_tuning, "Set tuning of single note");
+    m.def("set_note_tunings", &set_note_tunings, "Set tunings of all 128 midi notes");
     m.def("set_multi_channel", &set_multi_channel, "Set whether MIDI channel is in multi-channel tuning table");
     m.def("set_multi_channel_note_tuning", &set_multi_channel_note_tuning, "Set tuning of note on specific midi channel");
     m.def("scala_files_to_frequencies", &scala_files_to_frequencies, "Build frequencies corresponding to given scala files");
