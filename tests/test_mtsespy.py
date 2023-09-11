@@ -57,3 +57,29 @@ def test_set_note_tunings():
 
 def test_has_ipc():
     assert mts.has_ipc() == True
+
+
+def test_get_num_clients():
+    with mts.Master():
+        assert mts.get_num_clients() == 0
+        with mts.Client():
+            assert mts.get_num_clients() == 1
+            with mts.Client():
+                assert mts.get_num_clients() == 2
+        assert mts.get_num_clients() == 0
+
+
+def test_reinitialize():
+    assert mts.can_register_master()
+    mts.register_master()
+    assert not mts.can_register_master()
+    mts.reinitialize()
+    assert mts.can_register_master()
+
+
+def test_reinitialize_2():
+    mts.register_master()
+    mts.register_client()
+    assert mts.get_num_clients() == 1
+    mts.reinitialize()
+    assert mts.get_num_clients() == 0

@@ -76,6 +76,8 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("register_master", &MTS_RegisterMaster, "Register MTS master");
     m.def("deregister_master", &MTS_DeregisterMaster, "Deregister MTS master");
     m.def("has_ipc", &MTS_HasIPC, "Check if process running master is using IPC");
+    m.def("reinitialize", &MTS_Reinitialize, "Reset everything in MTS-ESP library");
+    m.def("get_num_clients", &MTS_GetNumClients, "Get number of connected clients");
     m.def("set_note_tuning", &set_note_tuning, "Set tuning of single note");
     m.def("set_note_tunings", &set_note_tunings, "Set tunings of all 128 midi notes");
     m.def("set_multi_channel", &set_multi_channel, "Set whether MIDI channel is in multi-channel tuning table");
