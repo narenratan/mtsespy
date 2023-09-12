@@ -96,3 +96,26 @@ def test_set_scale_name():
         with mts.Client() as c:
             name = mts.get_scale_name(c)
     assert name == "foo"
+
+
+def test_should_filter_note():
+    with mts.Client() as c:
+        should_filter = mts.should_filter_note(c, 69, 0)
+    assert not should_filter
+
+
+def test_filter_note():
+    with mts.Master():
+        mts.filter_note(True, 69, 0)
+        with mts.Client() as c:
+            should_filter = mts.should_filter_note(c, 69, 0)
+    assert should_filter
+
+
+def test_clear_note_filter():
+    with mts.Master():
+        mts.filter_note(True, 69, 0)
+        mts.clear_note_filter()
+        with mts.Client() as c:
+            should_filter = mts.should_filter_note(c, 69, 0)
+    assert not should_filter

@@ -18,6 +18,10 @@ void deregister_client(MTSClientWrapper client){
     MTS_DeregisterClient(client.ptr);
 }
 
+bool should_filter_note(MTSClientWrapper client, int midinote, int midichannel){
+    return MTS_ShouldFilterNote(client.ptr, midinote, midichannel);
+}
+
 double note_to_frequency(MTSClientWrapper client, int midinote, int midichannel){
     return MTS_NoteToFrequency(client.ptr, midinote, midichannel);
 }
@@ -44,6 +48,10 @@ void set_note_tunings(py::list frequencies_in_hz){
         f[i] = frequencies_in_hz[i].cast<double>();
     }
     MTS_SetNoteTunings(f);
+}
+
+void filter_note(bool doFilter, int midinote, int midichannel){
+    MTS_FilterNote(doFilter, midinote, midichannel);
 }
 
 void set_multi_channel(bool set, int midichannel){
@@ -73,6 +81,7 @@ PYBIND11_MODULE(_mtsespy, m)
     py::class_<MTSClientWrapper>(m, "MTSClient");
     m.def("register_client", &register_client, "Register MTS client");
     m.def("deregister_client", &deregister_client, "De-register MTS client");
+    m.def("should_filter_note", &should_filter_note, "Check if note should not be played");
     m.def("note_to_frequency", &note_to_frequency, "Convert midi note to frequency");
     m.def("retuning_in_semitones", &retuning_in_semitones, "Midi note retuning in semitones");
     m.def("retuning_as_ratio", &retuning_as_ratio, "Midi note retuning as ratio");
@@ -86,6 +95,8 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("set_note_tuning", &set_note_tuning, "Set tuning of single note");
     m.def("set_note_tunings", &set_note_tunings, "Set tunings of all 128 midi notes");
     m.def("set_scale_name", &MTS_SetScaleName, "Set scale name");
+    m.def("filter_note", &filter_note, "Instruct clients to filter note");
+    m.def("clear_note_filter", &MTS_ClearNoteFilter, "Clear note filter");
     m.def("set_multi_channel", &set_multi_channel, "Set whether MIDI channel is in multi-channel tuning table");
     m.def("set_multi_channel_note_tuning", &set_multi_channel_note_tuning, "Set tuning of note on specific midi channel");
     m.def("scala_files_to_frequencies", &scala_files_to_frequencies, "Build frequencies corresponding to given scala files");
