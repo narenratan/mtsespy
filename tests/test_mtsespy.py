@@ -186,3 +186,16 @@ def test_clear_note_filter_multi_channel_2():
         with mts.Client() as c:
             should_filter = mts.should_filter_note(c, 69, 1)
     assert should_filter
+
+
+def test_has_master():
+    with mts.Master():
+        with mts.Client() as c:
+            does_have_master = mts.has_master(c)
+    assert does_have_master
+
+
+def test_has_master_2():
+    with mts.Client() as c:
+        does_have_master = mts.has_master(c)
+    assert not does_have_master

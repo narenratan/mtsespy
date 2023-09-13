@@ -18,6 +18,10 @@ void deregister_client(MTSClientWrapper client){
     MTS_DeregisterClient(client.ptr);
 }
 
+bool has_master(MTSClientWrapper client){
+    return MTS_HasMaster(client.ptr);
+}
+
 bool should_filter_note(MTSClientWrapper client, int midinote, int midichannel){
     return MTS_ShouldFilterNote(client.ptr, midinote, midichannel);
 }
@@ -98,6 +102,7 @@ PYBIND11_MODULE(_mtsespy, m)
     py::class_<MTSClientWrapper>(m, "MTSClient");
     m.def("register_client", &register_client, "Register MTS client");
     m.def("deregister_client", &deregister_client, "De-register MTS client");
+    m.def("has_master", &has_master, "Check if client is connected to a master");
     m.def("should_filter_note", &should_filter_note, "Check if note should not be played");
     m.def("note_to_frequency", &note_to_frequency, "Convert midi note to frequency");
     m.def("retuning_in_semitones", &retuning_in_semitones, "Midi note retuning in semitones");
