@@ -58,9 +58,18 @@ void set_multi_channel(bool set, int midichannel){
     MTS_SetMultiChannel(set, midichannel);
 }
 
+void set_multi_channel_note_tunings(py::list frequencies_in_hz, int midichannel){
+    double f[128];
+    for(int i = 0; i < 128; i++) {
+        f[i] = frequencies_in_hz[i].cast<double>();
+    }
+    MTS_SetMultiChannelNoteTunings(f, midichannel);
+}
+
 void set_multi_channel_note_tuning(float frequency_in_hz, int midinote, int midichannel){
     MTS_SetMultiChannelNoteTuning(frequency_in_hz, midinote, midichannel);
 }
+
 
 py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_filename){
     auto s = Tunings::readSCLFile(scl_filename);
@@ -86,18 +95,19 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("retuning_in_semitones", &retuning_in_semitones, "Midi note retuning in semitones");
     m.def("retuning_as_ratio", &retuning_as_ratio, "Midi note retuning as ratio");
     m.def("get_scale_name", &get_scale_name, "Get scale name of current scale");
-    m.def("can_register_master", &MTS_CanRegisterMaster, "Check if master has already been registered");
     m.def("register_master", &MTS_RegisterMaster, "Register MTS master");
     m.def("deregister_master", &MTS_DeregisterMaster, "Deregister MTS master");
+    m.def("can_register_master", &MTS_CanRegisterMaster, "Check if master has already been registered");
     m.def("has_ipc", &MTS_HasIPC, "Check if process running master is using IPC");
     m.def("reinitialize", &MTS_Reinitialize, "Reset everything in MTS-ESP library");
     m.def("get_num_clients", &MTS_GetNumClients, "Get number of connected clients");
-    m.def("set_note_tuning", &set_note_tuning, "Set tuning of single note");
     m.def("set_note_tunings", &set_note_tunings, "Set tunings of all 128 midi notes");
+    m.def("set_note_tuning", &set_note_tuning, "Set tuning of single note");
     m.def("set_scale_name", &MTS_SetScaleName, "Set scale name");
     m.def("filter_note", &filter_note, "Instruct clients to filter note");
     m.def("clear_note_filter", &MTS_ClearNoteFilter, "Clear note filter");
     m.def("set_multi_channel", &set_multi_channel, "Set whether MIDI channel is in multi-channel tuning table");
+    m.def("set_multi_channel_note_tunings", &set_multi_channel_note_tunings, "Set tuning of all 128 notes on specific midi channel");
     m.def("set_multi_channel_note_tuning", &set_multi_channel_note_tuning, "Set tuning of note on specific midi channel");
     m.def("scala_files_to_frequencies", &scala_files_to_frequencies, "Build frequencies corresponding to given scala files");
 }

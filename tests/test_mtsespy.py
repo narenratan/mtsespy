@@ -119,3 +119,41 @@ def test_clear_note_filter():
         with mts.Client() as c:
             should_filter = mts.should_filter_note(c, 69, 0)
     assert not should_filter
+
+
+def test_set_multi_channel_note_tuning():
+    with mts.Master():
+        mts.set_multi_channel(True, 0)
+        mts.set_multi_channel_note_tuning(441.0, 69, 0)
+        with mts.Client() as c:
+            f = mts.note_to_frequency(c, 69, 0)
+    assert f == 441.0
+
+
+def test_set_multi_channel_note_tuning_2():
+    with mts.Master():
+        mts.set_multi_channel(False, 0)
+        mts.set_multi_channel_note_tuning(441.0, 69, 0)
+        with mts.Client() as c:
+            f = mts.note_to_frequency(c, 69, 0)
+    assert f == 440.0
+
+
+def test_set_multi_channel_note_tunings():
+    frequencies = list(range(128))
+    with mts.Master():
+        mts.set_multi_channel(True, 0)
+        mts.set_multi_channel_note_tunings(frequencies, 0)
+        with mts.Client() as c:
+            client_frequencies = [mts.note_to_frequency(c, i, 0) for i in range(128)]
+    assert frequencies == client_frequencies
+
+
+def test_set_multi_channel_note_tunings_2():
+    frequencies = list(range(128))
+    with mts.Master():
+        mts.set_multi_channel(False, 0)
+        mts.set_multi_channel_note_tunings(frequencies, 0)
+        with mts.Client() as c:
+            client_frequencies = [mts.note_to_frequency(c, i, 0) for i in range(128)]
+    assert frequencies != client_frequencies
