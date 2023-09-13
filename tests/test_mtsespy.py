@@ -157,3 +157,32 @@ def test_set_multi_channel_note_tunings_2():
         with mts.Client() as c:
             client_frequencies = [mts.note_to_frequency(c, i, 0) for i in range(128)]
     assert frequencies != client_frequencies
+
+
+def test_filter_note_multi_channel():
+    with mts.Master():
+        mts.set_multi_channel(True, 1)
+        mts.filter_note_multi_channel(True, 69, 1)
+        with mts.Client() as c:
+            should_filter = mts.should_filter_note(c, 69, 1)
+    assert should_filter
+
+
+def test_clear_note_filter_multi_channel():
+    with mts.Master():
+        mts.set_multi_channel(True, 1)
+        mts.filter_note_multi_channel(True, 69, 1)
+        mts.clear_note_filter_multi_channel(1)
+        with mts.Client() as c:
+            should_filter = mts.should_filter_note(c, 69, 1)
+    assert not should_filter
+
+
+def test_clear_note_filter_multi_channel_2():
+    with mts.Master():
+        mts.set_multi_channel(True, 1)
+        mts.filter_note_multi_channel(True, 69, 1)
+        mts.clear_note_filter_multi_channel(0)
+        with mts.Client() as c:
+            should_filter = mts.should_filter_note(c, 69, 1)
+    assert should_filter

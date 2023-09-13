@@ -70,6 +70,14 @@ void set_multi_channel_note_tuning(float frequency_in_hz, int midinote, int midi
     MTS_SetMultiChannelNoteTuning(frequency_in_hz, midinote, midichannel);
 }
 
+void filter_note_multi_channel(bool doFilter, int midinote, int midichannel){
+    MTS_FilterNoteMultiChannel(doFilter, midinote, midichannel);
+}
+
+void clear_note_filter_multi_channel(int midichannel){
+    MTS_ClearNoteFilterMultiChannel(midichannel);
+}
+
 
 py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_filename){
     auto s = Tunings::readSCLFile(scl_filename);
@@ -109,5 +117,7 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("set_multi_channel", &set_multi_channel, "Set whether MIDI channel is in multi-channel tuning table");
     m.def("set_multi_channel_note_tunings", &set_multi_channel_note_tunings, "Set tuning of all 128 notes on specific midi channel");
     m.def("set_multi_channel_note_tuning", &set_multi_channel_note_tuning, "Set tuning of note on specific midi channel");
+    m.def("filter_note_multi_channel", &filter_note_multi_channel, "Instruct clients to filter note on specific midi channel");
+    m.def("clear_note_filter_multi_channel", &clear_note_filter_multi_channel, "Clear note filter on specific midi channel");
     m.def("scala_files_to_frequencies", &scala_files_to_frequencies, "Build frequencies corresponding to given scala files");
 }
