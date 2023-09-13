@@ -3,7 +3,9 @@
 Currently work in progress. If you'd like to build and use this:
 ```console
 $ git clone https://github.com/narenratan/mtsespy.git
-$ python3 -m pip install ./mtsespy
+$ cd mtsespy
+$ git submodule update --init --recursive
+$ python3 -m pip install .
 ```
 
 Example master interpreter session:
