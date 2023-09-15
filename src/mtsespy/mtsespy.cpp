@@ -93,6 +93,10 @@ void clear_note_filter_multi_channel(int midichannel){
     MTS_ClearNoteFilterMultiChannel(midichannel);
 }
 
+void parse_midi_data(MTSClientWrapper client, const py::buffer buffer){
+    py::buffer_info info = buffer.request();
+    MTS_ParseMIDIData(client.ptr, (char*)info.ptr, info.size);
+}
 
 py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_filename){
     auto s = Tunings::readSCLFile(scl_filename);
@@ -138,4 +142,5 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("filter_note_multi_channel", &filter_note_multi_channel, "Instruct clients to filter note on specific midi channel");
     m.def("clear_note_filter_multi_channel", &clear_note_filter_multi_channel, "Clear note filter on specific midi channel");
     m.def("scala_files_to_frequencies", &scala_files_to_frequencies, "Build frequencies corresponding to given scala files");
+    m.def("parse_midi_data", &parse_midi_data, "Parse midi MTS sysex data to update tuning");
 }

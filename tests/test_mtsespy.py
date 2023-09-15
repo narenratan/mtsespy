@@ -244,3 +244,14 @@ def test_frequency_to_note_and_channel_3():
             note, channel = mts.frequency_to_note_and_channel(c, 441.0)
     assert note == 80
     assert channel == 1
+
+
+def test_parse_midi_data():
+    # MTS sysex message to tune midi note 69 up a quarter tone
+    msg = bytes.fromhex("F0 7F 00 08 02 00 01" + "45" + "45 40 00" + "F7")
+    with mts.Client() as c:
+        f_before = mts.note_to_frequency(c, 69, 0)
+        mts.parse_midi_data(c, msg)
+        f_after = mts.note_to_frequency(c, 69, 0)
+    assert f_before == 440.0
+    assert abs(f_after - 440.0 * 2 ** (1 / 24)) < 1e-3
