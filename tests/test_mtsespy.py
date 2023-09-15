@@ -22,6 +22,35 @@ def test_note_to_frequency():
     assert f == 440.0
 
 
+def test_retuning_in_semitones():
+    with mts.Client() as c:
+        semitones = mts.retuning_in_semitones(c, 69, 0)
+    assert semitones == 0.0
+
+
+def test_retuning_in_semitones_2():
+    with mts.Master():
+        mts.set_note_tuning(440 * 2 ** (1 / 24), 69)
+        with mts.Client() as c:
+            semitones = mts.retuning_in_semitones(c, 69, 0)
+    assert abs(semitones - 0.5) <= 1e-6
+
+
+def test_retuning_as_ratio():
+    with mts.Client() as c:
+        ratio = mts.retuning_as_ratio(c, 69, 0)
+    assert ratio == 1.0
+
+
+def test_retuning_as_ratio_2():
+    retune_ratio = 25 / 24
+    with mts.Master():
+        mts.set_note_tuning(440 * retune_ratio, 69)
+        with mts.Client() as c:
+            ratio = mts.retuning_as_ratio(c, 69, 0)
+    assert abs(ratio - retune_ratio) < 1e-6
+
+
 def test_master_context_manager():
     """
     Test that client pulls master's new frequency if used within Master context.
