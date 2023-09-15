@@ -33,6 +33,7 @@ class Master:
     Context manager to automatically register and deregister master.
 
     If a master already exists then `MasterExistsError` is raised.
+    A signal handler is added to call `deregister_master` on SIGTERM.
     """
 
     def __init__(self):
