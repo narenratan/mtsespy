@@ -16,6 +16,15 @@ def test_register_and_deregister_client():
     mts.deregister_client(client)
 
 
+def test_register_and_deregister_master():
+    mts.register_master()
+    mts.deregister_master()
+
+
+def test_can_register_master():
+    assert mts.can_register_master()
+
+
 def test_note_to_frequency():
     with mts.Client() as c:
         f = mts.note_to_frequency(c, 69, 0)
@@ -90,7 +99,7 @@ def test_set_note_tunings():
 
 
 def test_has_ipc():
-    assert mts.has_ipc() == True
+    assert mts.has_ipc()
 
 
 def test_get_num_clients():
