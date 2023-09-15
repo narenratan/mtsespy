@@ -6,6 +6,11 @@ import pytest
 import mtsespy as mts
 
 
+@pytest.fixture(autouse=True)
+def reinit():
+    mts.reinitialize()
+
+
 def test_register_and_deregister_client():
     client = mts.register_client()
     mts.deregister_client(client)
@@ -199,3 +204,43 @@ def test_has_master_2():
     with mts.Client() as c:
         does_have_master = mts.has_master(c)
     assert not does_have_master
+
+
+def test_frequency_to_note():
+    with mts.Client() as c:
+        note = mts.frequency_to_note(c, 441.0, 0)
+    assert note == 69
+
+
+def test_frequency_to_note_2():
+    with mts.Master():
+        mts.set_note_tuning(441.0, 80)
+        with mts.Client() as c:
+            note = mts.frequency_to_note(c, 441.0, 0)
+    assert note == 80
+
+
+def test_frequency_to_note_and_channel():
+    with mts.Client() as c:
+        note, channel = mts.frequency_to_note_and_channel(c, 441.0)
+    assert note == 69
+    assert channel == 0
+
+
+def test_frequency_to_note_and_channel_2():
+    with mts.Master():
+        mts.set_note_tuning(441.0, 80)
+        with mts.Client() as c:
+            note, channel = mts.frequency_to_note_and_channel(c, 441.0)
+    assert note == 80
+    assert channel == 0
+
+
+def test_frequency_to_note_and_channel_3():
+    with mts.Master():
+        mts.set_multi_channel(True, 1)
+        mts.set_multi_channel_note_tuning(441.0, 80, 1)
+        with mts.Client() as c:
+            note, channel = mts.frequency_to_note_and_channel(c, 441.0)
+    assert note == 80
+    assert channel == 1

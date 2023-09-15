@@ -38,6 +38,17 @@ double retuning_as_ratio(MTSClientWrapper client, int midinote, int midichannel)
     return MTS_RetuningAsRatio(client.ptr, midinote, midichannel);
 }
 
+int frequency_to_note(MTSClientWrapper client, double freq, int midichannel){
+    return MTS_FrequencyToNote(client.ptr, freq, midichannel);
+}
+
+py::tuple frequency_to_note_and_channel(MTSClientWrapper client, double freq){
+    char midichannel = 0;
+    int note;
+    note = MTS_FrequencyToNoteAndChannel(client.ptr, freq, &midichannel);
+    return py::make_tuple(note, (int)midichannel);
+}
+
 const char *get_scale_name(MTSClientWrapper client){
     return MTS_GetScaleName(client.ptr);
 }
@@ -107,6 +118,8 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("note_to_frequency", &note_to_frequency, "Convert midi note to frequency");
     m.def("retuning_in_semitones", &retuning_in_semitones, "Midi note retuning in semitones");
     m.def("retuning_as_ratio", &retuning_as_ratio, "Midi note retuning as ratio");
+    m.def("frequency_to_note", &frequency_to_note, "Get note number whose pitch is closest to given frequency");
+    m.def("frequency_to_note_and_channel", &frequency_to_note_and_channel, "Get note number and midi channel for pitch closest to given frequency");
     m.def("get_scale_name", &get_scale_name, "Get scale name of current scale");
     m.def("register_master", &MTS_RegisterMaster, "Register MTS master");
     m.def("deregister_master", &MTS_DeregisterMaster, "Deregister MTS master");
