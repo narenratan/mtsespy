@@ -1,7 +1,16 @@
 """
 Context managers for MTS-ESP clients and master
 """
+import signal
+import sys
+
 import mtsespy as mts
+
+
+def _deregister_master_handler(signum, frame):
+    print(f"Deregistering master after receiving {signal.Signals(signum).name}")
+    mts.deregister_master()
+    sys.exit(128 + signum)
 
 
 class Client:
@@ -29,12 +38,15 @@ class Master:
     def __init__(self):
         if not mts.can_register_master():
             raise MasterExistsError("An MTS-ESP master is already registered")
+        self._handler = signal.getsignal(signal.SIGTERM)
+        signal.signal(signal.SIGTERM, _deregister_master_handler)
         mts.register_master()
 
     def __enter__(self):
         return None
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        signal.signal(signal.SIGTERM, self._handler)
         mts.deregister_master()
 
 
