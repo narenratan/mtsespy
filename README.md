@@ -53,4 +53,15 @@ correspond as follows
 
 |   C++                             |   Python                          |
 | --------------------------------- | --------------------------------- |
-
+|   MTS_RegisterClient              |   register_client                 |
+|   MTS_DeregisterClient            |   deregister_client               |
+|   MTS_HasMaster                   |   has_master                      |
+|   MTS_ShouldFilterNote            |   should_filter_note              |
+|   MTS_NoteToFrequency             |   note_to_frequency               |
+|   MTS_RetuningInSemitones         |   retuning_in_semitones           |
+|   MTS_RetuningAsRatio             |   retuning_as_ratio               |
+|   MTS_FrequencyToNote             |   frequency_to_note               |
+|   MTS_FrequencyToNoteAndChannel   |   frequency_to_note_and_channel   |
+|   MTS_GetScaleName                |   get_scale_name                  |
+|   MTS_ParseMIDIDataU              |   -                               |
+|   MTS_ParseMIDIData               |   parse_midi_data                 |
