@@ -12,17 +12,18 @@ $ python3 -m pip install .
 ## Examples
 Set tuning of one midi note
 ```python
->>> with mts.Master():
-...     mts.set_note_tuning(441.0, 69)
+import mtsespy as mts
+
+with mts.Master():
+    mts.set_note_tuning(441.0, 69)
 ```
 
 Pull frequency of a midi note
 ```python
->>> with mts.Client() as c:
-...     f = mts.note_to_frequency(c, 69, 0)
-...
->>> f
-440.0
+import mtsespy as mts
+
+with mts.Client() as c:
+    f = mts.note_to_frequency(c, 69, 0)
 ```
 
 ## Wrapper names
