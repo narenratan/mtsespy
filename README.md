@@ -28,6 +28,9 @@ with mts.Client() as c:
     f = mts.note_to_frequency(c, 69, 0)
 ```
 
+The `Master` and `Client` context managers, used above, handle registering
+and deregistering the MTS-ESP master and client.
+
 ## Wrapper names
 
 All functions in the MTS-ESP library are wrapped. The function names
