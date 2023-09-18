@@ -3,7 +3,7 @@ Set multi-channel tuning from scala files
 
 Calling as
 
-    $ python3 -i multi_channel_from_scala.py example_1.scl example_1.kbm example_2.scl example_2.kbm
+    $ python3 multi_channel.py example_1.scl example_1.kbm example_2.scl example_2.kbm
 
 puts the tuning from example_1.scl on channel 0, example_2.scl on channel 1, and so on.
 """
