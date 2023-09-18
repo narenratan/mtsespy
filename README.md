@@ -1,6 +1,6 @@
 # Python bindings for ODDSound MTS-ESP
 
-# Installation
+## Installation
 To build and install:
 ```console
 $ git clone https://github.com/narenratan/mtsespy.git
@@ -10,7 +10,7 @@ $ python3 -m pip install .
 ```
 
 ## Examples
-Set tuning of one midi note
+Set tuning of midi note 69 to frequency 441 Hz
 ```python
 import mtsespy as mts
 
@@ -18,7 +18,7 @@ with mts.Master():
     mts.set_note_tuning(441.0, 69)
 ```
 
-Pull frequency of a midi note
+Pull frequency of midi note 69 on midi channel 0
 ```python
 import mtsespy as mts
 
