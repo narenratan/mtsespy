@@ -2,7 +2,7 @@
 
 ## Installation
 
-To build and install:
+Currently only Linux is supported. To build and install:
 ```console
 $ git clone https://github.com/narenratan/mtsespy.git
 $ cd mtsespy
