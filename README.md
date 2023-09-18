@@ -1,6 +1,7 @@
 # Python bindings for ODDSound MTS-ESP
 
 ## Installation
+
 To build and install:
 ```console
 $ git clone https://github.com/narenratan/mtsespy.git
@@ -10,6 +11,7 @@ $ python3 -m pip install .
 ```
 
 ## Examples
+
 Set tuning of midi note 69 to frequency 441 Hz
 ```python
 import mtsespy as mts
@@ -27,6 +29,7 @@ with mts.Client() as c:
 ```
 
 ## Wrapper names
+
 All functions in the MTS-ESP library are wrapped. The function names
 correspond as follows
 
@@ -66,3 +69,19 @@ correspond as follows
 |   MTS_GetScaleName                |   get_scale_name                  |
 |   MTS_ParseMIDIDataU              |   -                               |
 |   MTS_ParseMIDIData               |   parse_midi_data                 |
+
+
+## Scala files
+
+The `mtsespy` package also includes a `scala_files_to_frequencies`
+function which uses the Surge Synth Team [Tuning Library](https://github.com/surge-synthesizer/tuning-library).
+This is not part of the MTS-ESP library; it's included because I find
+it convenient to be able to use tunings in Scala scl and kbm files with
+MTS-ESP in Python.  The `scala_files_to_frequencies` function can be
+called as
+```python
+from mtsespy import scala_files_to_frequencies
+
+frequencies = scala_files_to_frequencies("tuning.scl", "tuning.kbm")
+```
+and returns a list of 128 frequencies in Hz, one for each each midi note.
