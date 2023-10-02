@@ -39,15 +39,21 @@ class Master:
     def __init__(self):
         if not mts.can_register_master():
             raise MasterExistsError("An MTS-ESP master is already registered")
-        self._handler = signal.getsignal(signal.SIGTERM)
-        signal.signal(signal.SIGTERM, _deregister_master_handler)
+        # Store existing signal handlers
+        self._handlers = {
+            x: signal.getsignal(x) for x in [signal.SIGINT, signal.SIGTERM]
+        }
+        for x in self._handlers:
+            signal.signal(x, _deregister_master_handler)
         mts.register_master()
 
     def __enter__(self):
         return None
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        signal.signal(signal.SIGTERM, self._handler)
+        # Restore original signal handlers
+        for k, v in self._handlers.items():
+            signal.signal(k, v)
         mts.deregister_master()
 
 
