@@ -14,10 +14,13 @@ $ python3 -m pip install .
 
 Set tuning of midi note 69 to frequency 441 Hz
 ```python
+import signal
+
 import mtsespy as mts
 
 with mts.Master():
     mts.set_note_tuning(441.0, 69)
+    signal.pause()
 ```
 
 Pull frequency of midi note 69 on midi channel 0
@@ -33,7 +36,7 @@ and deregistering the MTS-ESP master and client.
 
 ## Wrapper names
 
-All functions in the MTS-ESP library are wrapped. The function names
+The function names in the MTS-ESP C++ library and this Python wrapper
 correspond as follows
 
 ### Master functions
