@@ -12,6 +12,7 @@ Direct link to pdf:
 
     https://fael-downloads-prod.focusrite.com/customer/prod/s3fs-public/downloads/Launchpad%20X%20-%20Programmers%20Reference%20Manual.pdf
 
+Requires the Python packages mido and python-rtmidi as well as mtsespy.
 """
 import signal
 from itertools import product
