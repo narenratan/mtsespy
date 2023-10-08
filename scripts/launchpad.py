@@ -76,7 +76,7 @@ def tune(scale, tuning_map, base_freq=261.625565):
     tuning_map : dict of {(int, int) : (int, int)}
         Map from Launchpad key coordinates to octave and scale degree pairs,
         as returned by `map_scale`.
-    base_freq : optional float
+    base_freq : float
         Frequency in Hz to assign to 1.0 frequency ratio. Defaults to middle
         C frequency.
     """
