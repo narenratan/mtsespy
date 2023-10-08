@@ -15,7 +15,6 @@ Direct link to pdf:
 Requires the Python packages mido and python-rtmidi as well as mtsespy.
 """
 import signal
-from itertools import product
 
 import mido
 
@@ -26,7 +25,7 @@ import mtsespy as mts
 # bottom left key) to midi note number sent by Launchpad in programmer mode.
 # See page 10 of Launchpad Programmer Reference Guide.
 
-MIDI_NOTE_MAP = {(i, j): 10 * j + i + 11 for i, j in product(range(8), repeat=2)}
+MIDI_NOTE_MAP = {(i, j): 10 * j + i + 11 for i in range(8) for j in range(8)}
 
 
 def map_scale(scale_length, steps):
