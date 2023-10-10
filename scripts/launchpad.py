@@ -159,7 +159,7 @@ def main():
 
     # Set color for each scale degree here
     # See Launchpad Programmer Reference page 12 for the 128 available colors.
-    color_map = {0: 3, 8: 41, 11: 45}
+    color_map = {0: 5, 3: 9, 6: 13, 8: 21, 11: 41, 14: 45, 17: 49}
 
     set_key_colors(tuning_map, color_map, outport)
 
