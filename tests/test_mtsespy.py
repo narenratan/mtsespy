@@ -1,6 +1,9 @@
 """
 Tests for mtsespy
 """
+from concurrent.futures import ProcessPoolExecutor
+from time import sleep
+
 import pytest
 
 import mtsespy as mts
@@ -294,6 +297,32 @@ def test_parse_midi_data():
         f_after = mts.note_to_frequency(c, 69, 0)
     assert f_before == 440.0
     assert abs(f_after - 440.0 * 2 ** (1 / 24)) < 1e-3
+
+
+def master_function():
+    with mts.Master():
+        mts.set_note_tuning(441.0, 69)
+        sleep(1)
+
+
+def client_function():
+    with mts.Client() as c:
+        sleep(0.5)
+        f = mts.note_to_frequency(c, 69, 0)
+    return f
+
+
+def test_ipc():
+    """
+    Test that a frequency set in one process is picked up in another.
+
+    This is mainly a test of IPC in the libMTS.so library.
+    """
+    with ProcessPoolExecutor() as executor:
+        client_task = executor.submit(client_function)
+        master_task = executor.submit(master_function)
+        assert master_task.result() is None
+        assert client_task.result() == 441.0
 
 
 def test_scala_files_to_frequencies(tmp_path):
