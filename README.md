@@ -96,4 +96,8 @@ from mtsespy import scala_files_to_frequencies
 
 frequencies = scala_files_to_frequencies("tuning.scl", "tuning.kbm")
 ```
+or, using a default keyboard mapping,
+```python
+frequencies = scala_files_to_frequencies("tuning.scl")
+```
 and returns a list of 128 frequencies in Hz, one for each each midi note.

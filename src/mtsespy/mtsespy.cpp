@@ -111,9 +111,16 @@ void parse_midi_data(MTSClientWrapper client, const py::buffer buffer)
 py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_filename)
 {
     auto s = Tunings::readSCLFile(scl_filename);
-    auto k = Tunings::readKBMFile(kbm_filename);
-
-    Tunings::Tuning t(s, k);
+    Tunings::Tuning t;
+    if (kbm_filename == "")
+    {
+        t = Tunings::Tuning(s);
+    }
+    else
+    {
+        auto k = Tunings::readKBMFile(kbm_filename);
+        t = Tunings::Tuning(s, k);
+    }
 
     py::list res;
     for (int i = 0; i < 128; i++)
@@ -162,6 +169,7 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("clear_note_filter_multi_channel", &clear_note_filter_multi_channel,
           "Clear note filter on specific midi channel");
     m.def("scala_files_to_frequencies", &scala_files_to_frequencies,
-          "Build frequencies corresponding to given scala files");
+          "Build frequencies corresponding to given scala files", py::arg("scl_filename"),
+          py::arg("kbm_filename") = "");
     m.def("parse_midi_data", &parse_midi_data, "Parse midi MTS sysex data to update tuning");
 }

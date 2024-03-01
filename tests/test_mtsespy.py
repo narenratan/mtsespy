@@ -375,3 +375,5 @@ def test_scala_files_to_frequencies(tmp_path):
     frequencies = scala_files_to_frequencies(str(scl_path), str(kbm_path))
     assert abs(frequencies[69] - 440.0) <= 1e-8
     assert abs(frequencies[61] / frequencies[60] - 16 / 15) <= 1e-8
+
+    frequencies_default_kbm = scala_files_to_frequencies(str(scl_path))
