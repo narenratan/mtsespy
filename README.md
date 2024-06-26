@@ -3,7 +3,7 @@ Python bindings for the [ODDSound MTS-ESP library](https://oddsound.com/devs.php
 
 ## Installation
 
-Currently only Linux is supported. To build and install:
+Runs on Linux and Mac. To build and install:
 ```console
 $ git clone https://github.com/narenratan/mtsespy.git
 $ cd mtsespy
@@ -11,10 +11,12 @@ $ git submodule update --init --recursive
 $ python3 -m pip install .
 ```
 
-Also using MTS-ESP on Linux requires putting the libMTS.so
-shared object, available in the ODDSound MTS-ESP repo
-[here](https://github.com/ODDSound/MTS-ESP/tree/main/libMTS/Linux/x86_64),
-in /usr/local/lib.
+Using MTS-ESP on Linux requires putting the libMTS.so shared object, available
+in the ODDSound MTS-ESP repo
+[here](https://github.com/ODDSound/MTS-ESP/tree/main/libMTS/Linux/x86_64), in
+`/usr/local/lib`. On Mac MTS-ESP requires putting libMTS.dylib, available
+[here](https://github.com/ODDSound/MTS-ESP/tree/main/libMTS/Mac), in
+`/Library/Application Support/MTS-ESP`.
 
 ## Examples
 
