@@ -1,6 +1,7 @@
 """
 Tests for mtsespy
 """
+
 from concurrent.futures import ProcessPoolExecutor
 from time import sleep
 
@@ -30,6 +31,40 @@ def test_can_register_master():
 
 
 def test_note_to_frequency():
+    with mts.Client() as c:
+        f = mts.note_to_frequency(c, 69, 0)
+    assert f == 440.0
+
+
+def test_note_to_frequency_with_master_1():
+    with mts.Master():
+        with mts.Client() as c:
+            f = mts.note_to_frequency(c, 69, 0)
+    assert f == 440.0
+
+
+def test_note_to_frequency_with_master_2():
+    with mts.Master():
+        mts.set_note_tuning(441.0, 69)
+    with mts.Master():
+        with mts.Client() as c:
+            f = mts.note_to_frequency(c, 69, 0)
+    assert f == 441.0
+
+
+def test_note_to_frequency_with_master_and_reinitialize():
+    with mts.Master():
+        mts.set_note_tuning(441.0, 69)
+    mts.reinitialize()
+    with mts.Master():
+        with mts.Client() as c:
+            f = mts.note_to_frequency(c, 69, 0)
+    assert f == 440.0
+
+
+def test_note_to_frequency_after_master():
+    with mts.Master():
+        mts.set_note_tuning(441.0, 69)
     with mts.Client() as c:
         f = mts.note_to_frequency(c, 69, 0)
     assert f == 440.0
