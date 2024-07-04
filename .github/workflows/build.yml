@@ -42,3 +42,24 @@ jobs:
             source .env/bin/activate
             python3 -m pip install pytest
             pytest -v tests
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+            submodules: 'true'
+      - name: Build
+        run: |
+          python3 -m venv .env
+          .env/Scripts/Activate.ps1
+          python3 -m pip install .
+      # Windows CI tests currently fail with 'RuntimeError: IPC not available for MTS-ESP.'
+      # - name: Test
+      #   run: |
+      #       git clone https://github.com/ODDSound/MTS-ESP.git
+      #       mkdir "/Program Files/Common Files/MTS-ESP/"
+      #       cp MTS-ESP/libMTS/Win/64bit/LIBMTS.dll "/Program Files/Common Files/MTS-ESP/LIBMTS.dll"
+      #       .env/Scripts/Activate.ps1
+      #       python3 -m pip install pytest
+      #       pytest -v D:\a\mtsespy\mtsespy\tests
