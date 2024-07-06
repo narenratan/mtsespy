@@ -142,13 +142,14 @@ def test_has_ipc():
 
 
 def test_get_num_clients():
-    assert mts.get_num_clients() == 0
-    with mts.Client():
-        assert mts.get_num_clients() == 1
+    with mts.Master():
+        assert mts.get_num_clients() == 0
         with mts.Client():
-            assert mts.get_num_clients() == 2
-        assert mts.get_num_clients() == 1
-    assert mts.get_num_clients() == 0
+            assert mts.get_num_clients() == 1
+            with mts.Client():
+                assert mts.get_num_clients() == 2
+            assert mts.get_num_clients() == 1
+        assert mts.get_num_clients() == 0
 
 
 def test_reinitialize():
