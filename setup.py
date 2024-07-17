@@ -2,7 +2,7 @@ from skbuild import setup
 
 setup(
     name="mtsespy",
-    version="0.1.0",
+    version="1.0.0",
     description="Python bindings for ODDSound MTS-ESP",
     author="Naren Ratan",
     license="0BSD",
