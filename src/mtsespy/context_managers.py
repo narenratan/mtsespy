@@ -4,6 +4,7 @@ Context managers for MTS-ESP clients and master
 
 import signal
 import sys
+import threading
 from pathlib import Path
 
 import mtsespy as mts
@@ -61,11 +62,13 @@ class Master:
         if not mts.can_register_master():
             raise MasterExistsError("An MTS-ESP master is already registered")
         # Store existing signal handlers
-        self._handlers = {
-            x: signal.getsignal(x) for x in [signal.SIGINT, signal.SIGTERM]
-        }
-        for x in self._handlers:
-            signal.signal(x, _deregister_master_handler)
+        # Can only register signal handlers on main thread
+        if threading.current_thread() is threading.main_thread():
+            self._handlers = {
+                x: signal.getsignal(x) for x in [signal.SIGINT, signal.SIGTERM]
+            }
+            for x in self._handlers:
+                signal.signal(x, _deregister_master_handler)
         mts.register_master()
 
     def __enter__(self):
@@ -73,8 +76,9 @@ class Master:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         # Restore original signal handlers
-        for k, v in self._handlers.items():
-            signal.signal(k, v)
+        if threading.current_thread() is threading.main_thread():
+            for k, v in self._handlers.items():
+                signal.signal(k, v)
         mts.deregister_master()
 
 

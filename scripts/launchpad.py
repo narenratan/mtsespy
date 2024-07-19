@@ -14,6 +14,7 @@ Direct link to pdf:
 
 Requires the Python packages mido and python-rtmidi as well as mtsespy.
 """
+
 import signal
 
 import mido
