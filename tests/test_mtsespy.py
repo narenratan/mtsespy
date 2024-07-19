@@ -16,16 +16,19 @@ def reinit():
     mts.reinitialize()
 
 
+@pytest.mark.wheel
 def test_register_and_deregister_client():
     client = mts.register_client()
     mts.deregister_client(client)
 
 
+@pytest.mark.wheel
 def test_register_and_deregister_master():
     mts.register_master()
     mts.deregister_master()
 
 
+@pytest.mark.wheel
 def test_can_register_master():
     assert mts.can_register_master()
 
@@ -361,6 +364,7 @@ def test_ipc():
         assert client_task.result() == 441.0
 
 
+@pytest.mark.wheel
 def test_scala_files_to_frequencies(tmp_path):
     scl_path = tmp_path / "test.scl"
     kbm_path = tmp_path / "test.kbm"

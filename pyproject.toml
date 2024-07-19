@@ -24,3 +24,6 @@ Issues = "https://github.com/narenratan/mtsespy/issues"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "wheel: Tests which work without libMTS (run during isolated wheel builds)",
+]
