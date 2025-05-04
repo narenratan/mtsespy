@@ -1,11 +1,6 @@
 [build-system]
-requires = [
-    "setuptools",
-    "scikit-build>=0.13",
-    "cmake",
-    "ninja",
-]
-build-backend = "setuptools.build_meta"
+requires = ["scikit-build-core>=0.10", "pybind11"]
+build-backend = "scikit_build_core.build"
 
 [project]
 name = "mtsespy"
