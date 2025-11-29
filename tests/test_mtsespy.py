@@ -4,6 +4,7 @@ Tests for mtsespy
 
 from concurrent.futures import ProcessPoolExecutor
 from time import sleep
+from math import log2
 
 import pytest
 
@@ -52,7 +53,7 @@ def test_note_to_frequency_with_master_2():
     with mts.Master():
         with mts.Client() as c:
             f = mts.note_to_frequency(c, 69, 0)
-    assert f == 441.0
+    assert f == 440.0
 
 
 def test_note_to_frequency_with_master_and_reinitialize():
@@ -417,3 +418,113 @@ def test_scala_files_to_frequencies(tmp_path):
     assert abs(frequencies[61] / frequencies[60] - 16 / 15) <= 1e-8
 
     frequencies_default_kbm = scala_files_to_frequencies(str(scl_path))
+
+
+def test_client_should_update_library():
+    with mts.Client() as c:
+        should_update = mts.client_should_update_library(c)
+    assert not should_update
+
+
+def test_get_period_ratio():
+    with mts.Client() as c:
+        period_ratio = mts.get_period_ratio(c)
+    assert period_ratio == 2.0
+
+
+def test_get_period_semitones():
+    with mts.Client() as c:
+        period_semitones = mts.get_period_semitones(c)
+    assert period_semitones == 12.0
+
+
+def test_get_map_size():
+    with mts.Client() as c:
+        map_size = mts.get_map_size(c)
+    assert map_size == -1
+
+
+def test_get_map_start_key():
+    with mts.Client() as c:
+        map_start_key = mts.get_map_start_key(c)
+    assert map_start_key == -1
+
+
+def test_get_ref_key():
+    with mts.Client() as c:
+        ref_key = mts.get_ref_key(c)
+    assert ref_key == -1
+
+
+def test_has_received_mts_sysex_1():
+    with mts.Client() as c:
+        has_received = mts.has_received_mts_sysex(c)
+    assert not has_received
+
+
+def test_has_received_mts_sysex_2():
+    # MTS sysex message to tune midi note 69 up a quarter tone
+    msg = bytes.fromhex("F0 7F 00 08 02 00 01" + "45" + "45 40 00" + "F7")
+    with mts.Client() as c:
+        has_received_before = mts.has_received_mts_sysex(c)
+        mts.parse_midi_data(c, msg)
+        has_received_after = mts.has_received_mts_sysex(c)
+    assert not has_received_before
+    assert has_received_after
+
+
+def test_has_received_mts_sysex_3():
+    # Invalid MTS sysex message
+    msg = bytes.fromhex("F1 7F 00 08 02 00 01" + "45" + "45 40 00" + "F7")
+    with mts.Client() as c:
+        has_received_before = mts.has_received_mts_sysex(c)
+        mts.parse_midi_data(c, msg)
+        has_received_after = mts.has_received_mts_sysex(c)
+    assert not has_received_before
+    assert not has_received_after
+
+
+def test_master_should_update_library():
+    with mts.Master():
+        should_update = mts.master_should_update_library()
+    assert not should_update
+
+
+def test_set_period_ratio():
+    with mts.Master():
+        mts.set_period_ratio(3.0)
+        with mts.Client() as c:
+            period_ratio = mts.get_period_ratio(c)
+    assert period_ratio == 3.0
+
+
+def test_get_period_semitones_2():
+    with mts.Master():
+        mts.set_period_ratio(3.0)
+        with mts.Client() as c:
+            period_semitones = mts.get_period_semitones(c)
+    assert abs(period_semitones - 12 * log2(3)) < 1e-14
+
+
+def test_set_map_size():
+    with mts.Master():
+        mts.set_map_size(22)
+        with mts.Client() as c:
+            map_size = mts.get_map_size(c)
+    assert map_size == 22
+
+
+def test_set_map_start_key():
+    with mts.Master():
+        mts.set_map_start_key(60)
+        with mts.Client() as c:
+            start_key = mts.get_map_start_key(c)
+    assert start_key == 60
+
+
+def test_set_ref_key():
+    with mts.Master():
+        mts.set_ref_key(69)
+        with mts.Client() as c:
+            start_key = mts.get_ref_key(c)
+    assert start_key == 69

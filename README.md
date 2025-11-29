@@ -59,10 +59,15 @@ correspond as follows
 |   MTS_DeregisterMaster            |   deregister_master               |
 |   MTS_HasIPC                      |   has_ipc                         |
 |   MTS_Reinitialize                |   reinitialize                    |
+|   MTS_Master_ShouldUpdateLibrary  |   master_should_update_library    |
 |   MTS_GetNumClients               |   get_num_clients                 |
 |   MTS_SetNoteTunings              |   set_note_tunings                |
 |   MTS_SetNoteTuning               |   set_note_tuning                 |
 |   MTS_SetScaleName                |   set_scale_name                  |
+|   MTS_SetPeriodRatio              |   set_period_ratio                |
+|   MTS_SetMapSize                  |   set_map_size                    |
+|   MTS_SetMapStartKey              |   set_map_start_key               |
+|   MTS_SetRefKey                   |   set_ref_key                     |
 |   MTS_FilterNote                  |   filter_note                     |
 |   MTS_ClearNoteFilter             |   clear_note_filter               |
 |   MTS_SetMultiChannel             |   set_multi_channel               |
@@ -78,6 +83,7 @@ correspond as follows
 |   MTS_RegisterClient              |   register_client                 |
 |   MTS_DeregisterClient            |   deregister_client               |
 |   MTS_HasMaster                   |   has_master                      |
+|   MTS_Client_ShouldUpdateLibrary  |   client_should_update_library    |
 |   MTS_ShouldFilterNote            |   should_filter_note              |
 |   MTS_NoteToFrequency             |   note_to_frequency               |
 |   MTS_RetuningInSemitones         |   retuning_in_semitones           |
@@ -85,8 +91,14 @@ correspond as follows
 |   MTS_FrequencyToNote             |   frequency_to_note               |
 |   MTS_FrequencyToNoteAndChannel   |   frequency_to_note_and_channel   |
 |   MTS_GetScaleName                |   get_scale_name                  |
+|   MTS_GetPeriodRatio              |   get_period_ratio                |
+|   MTS_GetPeriodSemitones          |   get_period_semitones            |
+|   MTS_GetMapSize                  |   get_map_size                    |
+|   MTS_GetMapStartKey              |   get_map_start_key               |
+|   MTS_GetRefKey                   |   get_ref_key                     |
 |   MTS_ParseMIDIDataU              |   -                               |
 |   MTS_ParseMIDIData               |   parse_midi_data                 |
+|   MTS_HasReceivedMTSSysEx         |   has_received_mts_sysex          |
 
 
 ## Scala files

@@ -55,6 +55,23 @@ py::tuple frequency_to_note_and_channel(MTSClientWrapper client, double freq)
 
 const char *get_scale_name(MTSClientWrapper client) { return MTS_GetScaleName(client.ptr); }
 
+bool client_should_update_library(MTSClientWrapper client)
+{
+    return MTS_Client_ShouldUpdateLibrary(client.ptr);
+}
+
+double get_period_ratio(MTSClientWrapper client) { return MTS_GetPeriodRatio(client.ptr); }
+
+double get_period_semitones(MTSClientWrapper client) { return MTS_GetPeriodSemitones(client.ptr); }
+
+int get_map_size(MTSClientWrapper client) { return MTS_GetMapSize(client.ptr); }
+
+int get_map_start_key(MTSClientWrapper client) { return MTS_GetMapStartKey(client.ptr); }
+
+int get_ref_key(MTSClientWrapper client) { return MTS_GetRefKey(client.ptr); }
+
+bool has_received_mts_sysex(MTSClientWrapper client) { return MTS_HasReceivedMTSSysEx(client.ptr); }
+
 void set_note_tuning(float frequency_in_hz, int midinote)
 {
     MTS_SetNoteTuning(frequency_in_hz, midinote);
@@ -108,6 +125,12 @@ void parse_midi_data(MTSClientWrapper client, const py::buffer buffer)
     MTS_ParseMIDIData(client.ptr, (char *)info.ptr, info.size);
 }
 
+void set_map_size(int size) { MTS_SetMapSize(size); }
+
+void set_map_start_key(int key) { MTS_SetMapStartKey(key); }
+
+void set_ref_key(int key) { MTS_SetRefKey(key); }
+
 py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_filename)
 {
     auto s = Tunings::readSCLFile(scl_filename);
@@ -146,6 +169,13 @@ PYBIND11_MODULE(_mtsespy, m)
     m.def("frequency_to_note_and_channel", &frequency_to_note_and_channel,
           "Get note number and midi channel for pitch closest to given frequency");
     m.def("get_scale_name", &get_scale_name, "Get scale name of current scale");
+    m.def("client_should_update_library", &client_should_update_library, "Check if older version of libMTS dynamic library installed");
+    m.def("get_period_ratio", &get_period_ratio, "Get period of the current scale");
+    m.def("get_period_semitones", &get_period_semitones, "Get period of the current scale in semitones");
+    m.def("get_map_size", &get_map_size, "Get size of keyboard mapping");
+    m.def("get_map_start_key", &get_map_start_key, "Get start key of keyboard mapping");
+    m.def("get_ref_key", &get_ref_key, "Get reference key of tuning");
+    m.def("has_received_mts_sysex", &has_received_mts_sysex, "Check if client has received any valid MTS SysEx messages");
     m.def("register_master", &MTS_RegisterMaster, "Register MTS master");
     m.def("deregister_master", &MTS_DeregisterMaster, "Deregister MTS master");
     m.def("can_register_master", &MTS_CanRegisterMaster,
@@ -172,4 +202,9 @@ PYBIND11_MODULE(_mtsespy, m)
           "Build frequencies corresponding to given scala files", py::arg("scl_filename"),
           py::arg("kbm_filename") = "");
     m.def("parse_midi_data", &parse_midi_data, "Parse midi MTS sysex data to update tuning");
+    m.def("master_should_update_library", &MTS_Master_ShouldUpdateLibrary, "Check if older version of libMTS dynamic library installed");
+    m.def("set_period_ratio", &MTS_SetPeriodRatio, "Set the period ratio of the scale");
+    m.def("set_map_size", &set_map_size, "Set the size of the keyboard mapping");
+    m.def("set_map_start_key", &set_map_start_key, "Set the start key of the keyboard mapping");
+    m.def("set_ref_key", &set_ref_key, "Set the reference key of the tuning");
 }
