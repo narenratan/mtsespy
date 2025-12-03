@@ -47,7 +47,7 @@ int frequency_to_note(MTSClientWrapper client, double freq, int midichannel)
 
 py::tuple frequency_to_note_and_channel(MTSClientWrapper client, double freq)
 {
-    char midichannel = 0;
+    signed char midichannel = 0;
     int note;
     note = MTS_FrequencyToNoteAndChannel(client.ptr, freq, &midichannel);
     return py::make_tuple(note, (int)midichannel);
@@ -122,7 +122,7 @@ void clear_note_filter_multi_channel(int midichannel)
 void parse_midi_data(MTSClientWrapper client, const py::buffer buffer)
 {
     py::buffer_info info = buffer.request();
-    MTS_ParseMIDIData(client.ptr, (char *)info.ptr, info.size);
+    MTS_ParseMIDIData(client.ptr, (signed char *)info.ptr, info.size);
 }
 
 void set_map_size(int size) { MTS_SetMapSize(size); }
