@@ -9,7 +9,6 @@ from math import log2
 import pytest
 
 import mtsespy as mts
-from mtsespy import scala_files_to_frequencies
 
 
 @pytest.fixture(autouse=True)
@@ -363,61 +362,6 @@ def test_ipc():
         master_task = executor.submit(master_function)
         assert master_task.result() is None
         assert client_task.result() == 441.0
-
-
-@pytest.mark.wheel
-def test_scala_files_to_frequencies(tmp_path):
-    scl_path = tmp_path / "test.scl"
-    kbm_path = tmp_path / "test.kbm"
-
-    scl_path.write_text(
-        """Test scl
- 12
-!
- 16/15
- 9/8
- 6/5
- 5/4
- 4/3
- 7/5
- 3/2
- 8/5
- 5/3
- 9/5
- 15/8
- 2/1
-"""
-    )
-
-    kbm_path.write_text(
-        """12
-  0
-  127
-  60
-  69
-  440.0
-  12
-!
-  0
-  1
-  2
-  3
-  4
-  5
-  6
-  7
-  8
-  9
-  10
-  11
-"""
-    )
-
-    frequencies = scala_files_to_frequencies(str(scl_path), str(kbm_path))
-    assert abs(frequencies[69] - 440.0) <= 1e-8
-    assert abs(frequencies[61] / frequencies[60] - 16 / 15) <= 1e-8
-
-    frequencies_default_kbm = scala_files_to_frequencies(str(scl_path))
 
 
 def test_client_should_update_library():

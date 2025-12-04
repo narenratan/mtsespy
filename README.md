@@ -18,9 +18,7 @@ Using MTS-ESP requires the libMTS dynamic library which is available in the
 ODDSound MTS-ESP repo
 [here](https://github.com/ODDSound/MTS-ESP/tree/main/libMTS/). The places to
 put it for each OS are given in the MTS-ESP README
-[here](https://github.com/oddsound/mts-esp?tab=readme-ov-file#libmts). To use
-MTS-ESP on ARM, for example on a Raspberry Pi, you can build the open source
-libMTS in [this repo](https://github.com/baconpaul/mts-dylib-reference).
+[here](https://github.com/oddsound/mts-esp?tab=readme-ov-file#libmts).
 
 ## Examples
 
@@ -99,23 +97,3 @@ correspond as follows
 |   MTS_ParseMIDIDataU              |   -                               |
 |   MTS_ParseMIDIData               |   parse_midi_data                 |
 |   MTS_HasReceivedMTSSysEx         |   has_received_mts_sysex          |
-
-
-## Scala files
-
-The `mtsespy` package also includes a `scala_files_to_frequencies`
-function which uses the Surge Synth Team [Tuning Library](https://github.com/surge-synthesizer/tuning-library).
-This is not part of the MTS-ESP library; it's included because I find
-it convenient to be able to use tunings in Scala scl and kbm files with
-MTS-ESP in Python.  The `scala_files_to_frequencies` function can be
-called as
-```python
-from mtsespy import scala_files_to_frequencies
-
-frequencies = scala_files_to_frequencies("tuning.scl", "tuning.kbm")
-```
-or, using a default keyboard mapping,
-```python
-frequencies = scala_files_to_frequencies("tuning.scl")
-```
-and returns a list of 128 frequencies in Hz, one for each each midi note.

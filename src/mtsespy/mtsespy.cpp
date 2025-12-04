@@ -1,7 +1,6 @@
 #include <pybind11/pybind11.h>
 #include "libMTSClient.h"
 #include "libMTSMaster.h"
-#include "Tunings.h"
 
 namespace py = pybind11;
 
@@ -131,28 +130,6 @@ void set_map_start_key(int key) { MTS_SetMapStartKey(key); }
 
 void set_ref_key(int key) { MTS_SetRefKey(key); }
 
-py::list scala_files_to_frequencies(std::string scl_filename, std::string kbm_filename)
-{
-    auto s = Tunings::readSCLFile(scl_filename);
-    Tunings::Tuning t;
-    if (kbm_filename == "")
-    {
-        t = Tunings::Tuning(s);
-    }
-    else
-    {
-        auto k = Tunings::readKBMFile(kbm_filename);
-        t = Tunings::Tuning(s, k);
-    }
-
-    py::list res;
-    for (int i = 0; i < 128; i++)
-    {
-        res.append(t.frequencyForMidiNote(i));
-    }
-    return res;
-}
-
 PYBIND11_MODULE(_mtsespy, m)
 {
     m.doc() = "Wrapper for ODDSound MTS-ESP C++ library";
@@ -198,9 +175,6 @@ PYBIND11_MODULE(_mtsespy, m)
           "Instruct clients to filter note on specific midi channel");
     m.def("clear_note_filter_multi_channel", &clear_note_filter_multi_channel,
           "Clear note filter on specific midi channel");
-    m.def("scala_files_to_frequencies", &scala_files_to_frequencies,
-          "Build frequencies corresponding to given scala files", py::arg("scl_filename"),
-          py::arg("kbm_filename") = "");
     m.def("parse_midi_data", &parse_midi_data, "Parse midi MTS sysex data to update tuning");
     m.def("master_should_update_library", &MTS_Master_ShouldUpdateLibrary, "Check if older version of libMTS dynamic library installed");
     m.def("set_period_ratio", &MTS_SetPeriodRatio, "Set the period ratio of the scale");
