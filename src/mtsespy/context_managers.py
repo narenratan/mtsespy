@@ -6,6 +6,7 @@ import signal
 import sys
 import threading
 from pathlib import Path
+from functools import partial
 
 import mtsespy as mts
 
@@ -27,13 +28,31 @@ def _check_dso():
         raise RuntimeError(msg)
 
 
-def _deregister_master_handler(signum, frame):
-    print(f"Deregistering master after receiving {signal.Signals(signum).name}")
-    mts.deregister_master()
+def _deregister_handler(signum, frame, name):
+    print(f"Deregistering {name} after receiving {signal.Signals(signum).name}")
     sys.exit(128 + signum)
 
 
-class Client:
+class _SignalHandler:
+    def set_handlers(self, name):
+        # Store existing signal handlers
+        # Can only register signal handlers on main thread
+        if threading.current_thread() is threading.main_thread():
+            self._handlers = {
+                x: signal.getsignal(x) for x in [signal.SIGINT, signal.SIGTERM]
+            }
+            handler = partial(_deregister_handler, name=name)
+            for x in self._handlers:
+                signal.signal(x, handler)
+
+    def restore_handlers(self):
+        # Restore original signal handlers
+        if threading.current_thread() is threading.main_thread():
+            for k, v in self._handlers.items():
+                signal.signal(k, v)
+
+
+class Client(_SignalHandler):
     """
     Context manager to automatically register and deregister client.
     """
@@ -43,13 +62,15 @@ class Client:
         self._client = mts.register_client()
 
     def __enter__(self):
+        self.set_handlers(name="client")
         return self._client
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        self.restore_handlers()
         mts.deregister_client(self._client)
 
 
-class Master:
+class Master(_SignalHandler):
     """
     Context manager to automatically register and deregister master.
 
@@ -61,24 +82,14 @@ class Master:
         _check_dso()
         if not mts.can_register_master():
             raise MasterExistsError("An MTS-ESP master is already registered")
-        # Store existing signal handlers
-        # Can only register signal handlers on main thread
-        if threading.current_thread() is threading.main_thread():
-            self._handlers = {
-                x: signal.getsignal(x) for x in [signal.SIGINT, signal.SIGTERM]
-            }
-            for x in self._handlers:
-                signal.signal(x, _deregister_master_handler)
+        self.set_handlers(name="master")
         mts.register_master()
 
     def __enter__(self):
         return None
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        # Restore original signal handlers
-        if threading.current_thread() is threading.main_thread():
-            for k, v in self._handlers.items():
-                signal.signal(k, v)
+        self.restore_handlers()
         mts.deregister_master()
 
 
